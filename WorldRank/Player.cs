@@ -1,28 +1,33 @@
+using WorldRank.Enums;
+using WorldRank.Exceptions;
+using WorldRank.Interfaces;
+
 namespace WorldRank;
 
-public class Player
+public class Player : IPlayer
 {
-    public Guid Id { get; }
-    public string Name { get; }
-    public int Score { get; private set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Score { get; set; }
+    public Dictionary<Currency, Wallet> Wallets { get; set; } = new ();
 
-    public Player(string name)
+    public Player(int id, string name, int score)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("Name cannot be null or empty.", nameof(name));
-
-        Id = Guid.NewGuid();
         Name = name;
+        Id = id;
+        Score = score;
     }
 
     public void UpdateScore(int newScore)
     {
         if (newScore < 0)
-            throw new ArgumentOutOfRangeException(nameof(newScore), "Score cannot be negative.");
+            throw new NegativeScoreException();
 
         Score = newScore;
     }
 
-    public override string ToString() =>
-            $"[{Id}] {Name} - Score: {Score}";
+    public override string ToString()
+    {
+        return $"[{Id}] {Name} - Score: {Score}";
+    }
 }
