@@ -1,5 +1,5 @@
-using WorldRank.Console.Enums;
-using WorldRank.Console.Exceptions;
+using WorldRank.Domain.Exceptions;
+using WorldRank.Domain.Enums;
 using WorldRank.Entities.Wallets;
 
 namespace WorldRank.Domain.Entities.Wallets
