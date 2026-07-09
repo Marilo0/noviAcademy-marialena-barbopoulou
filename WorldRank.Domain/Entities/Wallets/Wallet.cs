@@ -60,6 +60,12 @@ namespace WorldRank.Domain.Entities.Wallets
 			Balance = newBalance;
 		}
 
+		public void ForceWithdraw(decimal amount)
+		{
+            var newBalance = Balance - amount;
+            Balance = newBalance;
+        }
+
 		public override string ToString() => $"Balance -> {Balance} Currency -> {Currency} IsBlocked -> {IsBlocked}";
 	}
 }

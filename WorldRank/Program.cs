@@ -1,7 +1,10 @@
 using NLog;
-using WorldRank.Console;
-using WorldRank.Console.Enums;
-using WorldRank.Console.Exceptions;
+using WorldRank.Domain.Enums;
+using WorldRank.Domain.Exceptions;
+using WorldRank.Domain.Entities.Player;
+using WorldRank.Domain.Entities.Wallets;
+using WorldRank.Infrastructure.Repositories;
+using WorldRank.Application.Interfaces;
 
 var logger = LogManager.GetCurrentClassLogger();
 
