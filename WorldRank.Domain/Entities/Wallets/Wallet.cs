@@ -1,19 +1,24 @@
 using WorldRank.Domain.Exceptions;
 using WorldRank.Domain.Enums;
-using WorldRank.Entities.Wallets;
 
 namespace WorldRank.Domain.Entities.Wallets
 {
 	public class Wallet : IWallet
 	{
 		public Currency Currency { get; }
-		public int PlayerId { get; }
+        public int Id { get; }
+        public int PlayerId { get; }
 		public decimal Balance { get; private set; }
 		public bool IsBlocked { get; private set; }
 
-		public Wallet(int playerId, Currency currency, decimal balance, bool isBlocked = false)
+        public Wallet()
+        {
+
+        }
+        public Wallet(int id, int playerId, Currency currency, decimal balance, bool isBlocked = false)
 		{
-			PlayerId = playerId;
+            Id = id;
+            PlayerId = playerId;
 			if (balance < 0)
 				throw new InsufficientFundsException(balance);
 
@@ -60,10 +65,12 @@ namespace WorldRank.Domain.Entities.Wallets
 			Balance = newBalance;
 		}
 
-		public void ForceWithdraw(decimal amount)
+		public void ForceSubtractFunds(decimal amount)
 		{
-            var newBalance = Balance - amount;
-            Balance = newBalance;
+            if (amount <= 0)
+                throw new InvalidAmountException(amount);
+
+            Balance -= amount;
         }
 
 		public override string ToString() => $"Balance -> {Balance} Currency -> {Currency} IsBlocked -> {IsBlocked}";
