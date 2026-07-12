@@ -1,24 +1,24 @@
-namespace WorldRank.Domain.Entities.Player;
+namespace WorldRank.Domain.Entities;
 
 public class Player : IPlayer
 {
 	public int Id { get; }
 	public string Name { get; private set; }
 	public int Score { get; private set; }
-    
+
 	public Player()
-    {
+	{
 
-    }
+	}
 
-    public Player(int id, string name, int score)
-    {
-        Id = id;
-        Name = name;
-        Score = score;
-    }
+	public Player(int id, string name, int score)
+	{
+		Id = id;
+		Name = name;
+		Score = score;
+	}
 
-    public Player(int id, string name)
+	public Player(int id, string name)
 	{
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentException("Name cannot be empty.", nameof(name));

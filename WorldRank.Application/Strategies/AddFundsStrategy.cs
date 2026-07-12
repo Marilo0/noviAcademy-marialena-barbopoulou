@@ -1,11 +1,11 @@
-﻿using WorldRank.Domain.Entities.Wallets;
+using WorldRank.Domain.Entities;
 
-namespace WorldRank.Application.Strategies
+namespace WorldRank.Application.Strategies;
+
+/// <summary>Adds funds - deposit, bonus.</summary>
+public class AddFundsStrategy : IFundsStrategy
 {
-    internal class AddFundsStrategy : IFundsStrategy
-    {
-        public FundsOperation Operation => FundsOperation.Add;
+    public FundsOperation Operation => FundsOperation.Add;
 
-        public void Execute(Wallet wallet, decimal amount) => wallet.Deposit(amount);
-    }
+    public void Execute(Wallet wallet, decimal amount) => wallet.Deposit(amount);
 }
