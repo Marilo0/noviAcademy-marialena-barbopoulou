@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="WorldRank.Application/WorldRank.Application.csproj" Id="39915e4a-f804-4f69-ac95-b87c3f6003b0" />
+  <Project Path="WorldRank.Console/WorldRank.Console.csproj" />
   <Project Path="WorldRank.Domain/WorldRank.Domain.csproj" Id="3d2883a2-dd4e-49d5-9c77-4fd46257eb41" />
   <Project Path="WorldRank.Infrastructure/WorldRank.Infrastructure.csproj" Id="459932a2-27b1-4ea7-948f-af148adaa9a9" />
-  <Project Path="WorldRank/WorldRank.csproj" />
 </Solution>
