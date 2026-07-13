@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using WorldRank.Application.Interfaces;
 using WorldRank.Domain.Entities;
 using WorldRank.Infrastructure.Persistence;
@@ -9,9 +10,16 @@ public class DBPlayerRepository : IPlayerRepository
 {
     private readonly WorldRankDbContext _context;
 
+    private readonly IMemoryCache _memoryCache;
     public DBPlayerRepository(WorldRankDbContext context)
     {
         _context = context;
+    }
+
+    public DBPlayerRepository(WorldRankDbContext context, IMemoryCache memoryCache)
+    {
+        _context = context;
+        memoryCache = _memoryCache;
     }
 
     public void AddPlayer(Player player)
