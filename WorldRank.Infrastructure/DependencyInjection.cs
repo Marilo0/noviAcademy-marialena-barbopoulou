@@ -21,10 +21,10 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IPlayerRepository,
-            InMemoryPlayerRepository>();
+            DBPlayerRepository>();
 
         services.AddSingleton<IWalletRepository,
-            InMemoryWalletRepository>();
+            DBWalletRepository>();
 
         return services;
     }
