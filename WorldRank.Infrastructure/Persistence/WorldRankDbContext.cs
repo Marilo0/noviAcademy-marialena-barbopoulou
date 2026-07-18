@@ -5,15 +5,12 @@ namespace WorldRank.Infrastructure.Persistence;
 
 public class WorldRankDbContext : DbContext
 {
-    public WorldRankDbContext(
-        DbContextOptions<WorldRankDbContext> options)
-        : base(options)
+    public WorldRankDbContext(DbContextOptions<WorldRankDbContext> options): base(options)
     {
     }
 
-    public DbSet<Player> Players { get; set; }
-
-    public DbSet<Wallet> Wallets { get; set; }
+    public DbSet<Player> Players => Set<Player>();
+    public DbSet<Wallet> Wallets => Set<Wallet>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

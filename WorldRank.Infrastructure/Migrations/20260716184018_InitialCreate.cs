@@ -30,8 +30,8 @@ namespace WorldRank.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Currency = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
+                    Currency = table.Column<int>(type: "int", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false)
                 },

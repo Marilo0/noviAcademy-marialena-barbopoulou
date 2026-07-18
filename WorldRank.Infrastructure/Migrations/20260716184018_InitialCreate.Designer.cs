@@ -11,7 +11,7 @@ using WorldRank.Infrastructure.Persistence;
 namespace WorldRank.Infrastructure.Migrations
 {
     [DbContext(typeof(WorldRankDbContext))]
-    [Migration("20260712182919_InitialCreate")]
+    [Migration("20260716184018_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,7 +19,7 @@ namespace WorldRank.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

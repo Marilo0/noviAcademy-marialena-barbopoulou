@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace WorldRank.Infrastructure.Persistence
 {
-    public class WorldRankDbContextContextFactory : IDesignTimeDbContextFactory<WorldRankDbContext>
+    public class WorldRankDbContextFactory : IDesignTimeDbContextFactory<WorldRankDbContext>
     {
         public WorldRankDbContext CreateDbContext(string[] args)
         {
