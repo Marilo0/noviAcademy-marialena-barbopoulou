@@ -24,7 +24,7 @@ public static class DependencyInjection
             DBPlayerRepository>();
 
         services.AddSingleton<IWalletRepository,
-            DBWalletRepository>();
+            DbWalletRepository>();
 
         return services;
     }
