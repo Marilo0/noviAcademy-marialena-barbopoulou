@@ -1,14 +1,13 @@
-using WorldRank.Domain.Enums;
-
 namespace WorldRank.Domain.Exceptions;
 
+// Raised when a fund operation is attempted on a blocked wallet.
 public class WalletBlockedException : WalletException
 {
-	public Currency Currency { get; }
+    public int WalletId { get; }
 
-	public WalletBlockedException(Currency currency)
-			: base($"The {currency} wallet is blocked. Unblock it before performing this operation.")
-	{
-		Currency = currency;
-	}
+    public WalletBlockedException(int walletId)
+        : base($"Wallet {walletId} is blocked and cannot accept fund operations.")
+    {
+        WalletId = walletId;
+    }
 }

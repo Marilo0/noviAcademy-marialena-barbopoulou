@@ -6,5 +6,5 @@ public interface IPlayer
 	string Name { get; }
 	int Score { get; }
 
-	void AddScore(int points);
+	void UpdateScore(int points);
 }

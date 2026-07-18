@@ -5,75 +5,66 @@ namespace WorldRank.Domain.Entities;
 
 public class Wallet : IWallet
 {
-	public int Id { get; private set; }
-	public Currency Currency { get; private set; }
-	public int PlayerId { get; private set; }
-	public decimal Balance { get; private set; }
-	public bool IsBlocked { get; private set; }
+    public int Id { get; private set; }
+    public int PlayerId { get; }
+    public Currency Currency { get; }
+    public decimal Balance { get; private set; }
+    public bool IsBlocked { get; private set; }
+    private Wallet()
+    {
+    }
+    public Wallet(int playerId, Currency currency, bool isBlocked = false)
+    {
+      
+        PlayerId = playerId;
+        Currency = currency;
+        IsBlocked = isBlocked;
+    }
+    
+    public void SetBalance(decimal balance)
+    {
+        if (balance < 0)
+            throw new InsufficientFundsException(balance);
 
-	public Wallet()
-	{
+        Balance = balance;
+    }
 
-	}
+    public void Deposit(decimal amount)
+    {
+        if (IsBlocked)
+            throw new WalletBlockedException(Id);
 
-	public Wallet(int id, int playerId, Currency currency, decimal balance, bool isBlocked = false)
-	{
-		if (balance < 0)
-			throw new InsufficientFundsException(balance);
-		Id = id;
-		PlayerId = playerId;
-		Balance = balance;
-		Currency = currency;
-		IsBlocked = isBlocked;
-	}
+        if (amount <= 0)
+            throw new InvalidAmountException(amount);
 
-	public void Block() => IsBlocked = true;
+        Balance += amount;
+    }
 
-	public void Unblock() => IsBlocked = false;
+    public void Withdraw(decimal amount)
+    {
+        if (IsBlocked)
+            throw new WalletBlockedException(Id);
 
-	public void SetBalance(decimal balance)
-	{
-		if (balance < 0)
-			throw new InsufficientFundsException(balance);
+        if (amount <= 0)
+            throw new InvalidAmountException(amount);
 
-		Balance = balance;
-	}
+        if (amount > Balance)
+            throw new InsufficientFundsException(amount, Balance);
 
-	public void Deposit(decimal amount)
-	{
-		if (amount <= 0)
-			throw new InvalidAmountException(amount);
+        Balance -= amount;
+    }
 
-		if (IsBlocked)
-			throw new WalletBlockedException(Currency);
+    public void ForceSubtractFunds(decimal amount)
+    {
+        if (amount <= 0)
+            throw new InvalidAmountException(amount);
 
-		Balance += amount;
-	}
+        Balance -= amount;
+    }
 
-	public void Withdraw(decimal amount)
-	{
-		if (amount <= 0)
-			throw new InvalidAmountException(amount);
+    public void Block() => IsBlocked = true;
+    public void Unblock() => IsBlocked = false;
 
-		if (IsBlocked)
-			throw new WalletBlockedException(Currency);
-
-		var newBalance = Balance - amount;
-		if (newBalance < 0)
-			throw new InsufficientFundsException(newBalance);
-
-		Balance = newBalance;
-	}
-
-	public void ForceSubtractFunds(decimal amount)
-	{
-		if (amount <= 0)
-			throw new InvalidAmountException(amount);
-
-		// Forced deduction (penalty / chargeback): allowed to drive the balance negative
-		// and bypasses the blocked flag on purpose.
-		Balance -= amount;
-	}
-
-	public override string ToString() => $"Balance -> {Balance} Currency -> {Currency} IsBlocked -> {IsBlocked}";
+    public override string ToString() =>
+        $"[{Id}] {Currency} {Balance:0.00}{(IsBlocked ? " (blocked)" : string.Empty)}";
 }
