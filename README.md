@@ -1,1 +1,1 @@
-# novi-Academy-BabisTs
+#	Project developed for the purpose of practicing Clean Architecture while participating in Novibet's Academy. The project is built using .NET10 ASP.NET Core Web API, using Entity Framework Core for data access and SQL Server as the database.
