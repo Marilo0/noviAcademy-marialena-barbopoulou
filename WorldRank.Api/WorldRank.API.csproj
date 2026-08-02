@@ -25,5 +25,10 @@
     <ProjectReference Include="..\WorldRank.Gateway\WorldRank.Gateway.csproj" />
     <ProjectReference Include="..\WorldRank.Infrastructure\WorldRank.Infrastructure.csproj" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="nlog.config"
+		  CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
 
 </Project>

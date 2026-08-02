@@ -3,7 +3,7 @@ using WorldRank.Application.Interfaces;
 using WorldRank.Domain.Entities;
 using WorldRank.Domain.Enums;
 using WorldRank.Domain.Exceptions;
-using WorldRank.Infrastructure.Persistence;
+using WorldRank.Infrastructure.Data;
 
 namespace WorldRank.Infrastructure.Repositories;
 

@@ -13,14 +13,17 @@ public class Wallet : IWallet
     private Wallet()
     {
     }
-    public Wallet(int playerId, Currency currency, bool isBlocked = false)
+    public Wallet(int playerId, Currency currency, decimal balance, bool isBlocked = false)
     {
-      
         PlayerId = playerId;
+        if (balance < 0)
+            throw new InsufficientFundsException(balance);
+
+        Balance = balance;
         Currency = currency;
         IsBlocked = isBlocked;
     }
-    
+
     public void SetBalance(decimal balance)
     {
         if (balance < 0)

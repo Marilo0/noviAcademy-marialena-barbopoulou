@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WorldRank.Application.Interfaces;
 using WorldRank.Domain.Entities;
-using WorldRank.Infrastructure.Persistence;
+using WorldRank.Infrastructure.Data;
 
 namespace WorldRank.Infrastructure.Repositories;
 

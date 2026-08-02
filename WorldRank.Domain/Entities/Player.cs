@@ -29,5 +29,13 @@ public class Player : IPlayer
         Score = newScore;
     }
 
+    public static Player CreateNew(int id, string name, int score)
+    {
+        var p = new Player(name);
+        p.Id = id;
+        p.UpdateScore(score);
+        return p;
+    }
+
     public override string ToString() => $"[{Id}] {Name} - Score: {Score}";
 }

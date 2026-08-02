@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WorldRank.Domain.Entities;
 
-namespace WorldRank.Infrastructure.Persistence;
+namespace WorldRank.Infrastructure.Data;
 
 public class WorldRankDbContext : DbContext
 {

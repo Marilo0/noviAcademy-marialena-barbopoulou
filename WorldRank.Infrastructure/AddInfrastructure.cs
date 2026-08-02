@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WorldRank.Application.Interfaces;
-using WorldRank.Infrastructure.Persistence;
+using WorldRank.Infrastructure.Data;
 using WorldRank.Infrastructure.Repositories;
 
 namespace WorldRank.Infrastructure;
@@ -20,11 +20,9 @@ public static class DependencyInjection
                 "TrustServerCertificate=true");
         });
 
-        services.AddSingleton<IPlayerRepository,
-            DBPlayerRepository>();
+        services.AddScoped<IPlayerRepository, DBPlayerRepository>();
+        services.AddScoped<IWalletRepository, DbWalletRepository>();
 
-        services.AddSingleton<IWalletRepository,
-            DbWalletRepository>();
 
         return services;
     }

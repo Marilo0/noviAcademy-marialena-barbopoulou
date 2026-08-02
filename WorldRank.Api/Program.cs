@@ -5,9 +5,10 @@ using WorldRank.Application.Interfaces;
 using WorldRank.Application.Services;
 using WorldRank.Application.Strategies;
 using WorldRank.Infrastructure.Caching;
+using WorldRank.Infrastructure.Data;
+
 
 //using WorldRank.Gateway;
-using WorldRank.Infrastructure.Persistence;
 using WorldRank.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,43 +1,75 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using WorldRank.API.Dtos;
+using WorldRank.Application.Commands.Wallets;
+using WorldRank.Application.Queries.Wallets;
 using WorldRank.Application.Services;
 using WorldRank.Domain.Exceptions;
-using WorldRank.API.Dtos;
 
-namespace WorldRank.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class WalletsController : ControllerBase
+namespace WorldRank.API.Controllers
 {
-    private readonly IWalletService _wallets;
-
-    public WalletsController(IWalletService wallets) => _wallets = wallets;
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateWalletRequest request, CancellationToken cancellationToken)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class WalletsController : ControllerBase
     {
-        var wallet = await _wallets.CreateWalletAsync(request.PlayerId, request.Currency, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = wallet.Id }, WalletResponse.From(wallet));
-    }
+        private readonly IMediator _mediator;
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
-    {
-        var wallet = await _wallets.GetByIdAsync(id, cancellationToken);
-        return wallet is null ? NotFound() : Ok(WalletResponse.From(wallet));
-    }
-
-    [HttpPost("{id:int}/deposit")]
-    public async Task<IActionResult> Deposit(int id, [FromBody] DepositRequest request, CancellationToken cancellationToken)
-    {
-        try
+        public WalletsController(IMediator mediator)
         {
-            var wallet = await _wallets.DepositAsync(id, request.Amount, cancellationToken);
-            return wallet is null ? NotFound() : Ok(WalletResponse.From(wallet));
+
+            _mediator = mediator;
         }
-        catch (WalletException ex)
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetWalletById(int id, CancellationToken cancellationToken)
         {
-            return BadRequest(new { error = ex.Message });
+            var result = await _mediator.Send(new GetWalletByIdQuery(id), cancellationToken);
+            if (result is null)
+                return NotFound();
+            var response = WalletResponse.FromWallet(result);
+
+            return Ok(response);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateWalletRequest req, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var walletId = await _mediator.Send(new CreateWalletCommand(req.PlayerId, req.Currency), cancellationToken);
+
+                var response = new WalletResponse(walletId, req.PlayerId, req.Currency.ToString(), 0m, false);
+
+                return CreatedAtAction(nameof(GetWalletById), new { id = walletId }, response);
+            }
+            catch (PlayerNotFoundException exception)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (DuplicateWalletException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpPost("{id:int}/deposit")]
+        public async Task<IActionResult> Deposit([FromRoute] int id, [FromBody] DepositRequest req, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var wallet = await _mediator.Send(new DepositToWalletCommand(id, req.Amount), cancellationToken);
+                if (wallet is null)
+                {
+                    return NotFound();
+                }
+                var response = WalletResponse.FromWallet(wallet);
+                return Ok(response);
+            }
+            catch (WalletException exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
     }
 }

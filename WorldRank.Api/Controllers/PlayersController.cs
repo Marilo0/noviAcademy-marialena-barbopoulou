@@ -1,48 +1,65 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WorldRank.Application.Services;
-using WorldRank.Domain.Entities;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using WorldRank.API.Dtos;
+using WorldRank.Application.Commands.Players;
+using WorldRank.Application.Queries.Players;
+using WorldRank.Application.Services;
 
-namespace WorldRank.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class PlayersController : ControllerBase
+namespace WorldRank.API.Controllers
 {
-    private readonly IPlayerService _players;
-
-    public PlayersController(IPlayerService players)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PlayersController : ControllerBase
     {
-        _players = players;
-    }
+        private readonly PlayerService _playerService;
+        private readonly IMediator _mediator;
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreatePlayerRequest request, CancellationToken cancellationToken)
-    {
-        Player player;
-        try
+        public PlayersController(PlayerService playerService, IMediator mediator)
         {
-            player = await _players.CreateAsync(request.Name, request.Score, cancellationToken);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { error = ex.Message });
+            _playerService = playerService;
+            _mediator = mediator;
         }
 
-        return CreatedAtAction(nameof(GetById), new { id = player.Id }, PlayerResponse.From(player));
-    }
+        [HttpGet]
+        [HttpGet]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var players = await _mediator.Send(new GetAllQuery(), cancellationToken);
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
-    {
-        var player = await _players.GetByIdAsync(id, cancellationToken);
-        return player is null ? NotFound() : Ok(PlayerResponse.From(player));
-    }
+            var response = players.Select(PlayerResponse.FromPlayer).ToList();
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
-    {
-        var players = await _players.GetAllAsync(cancellationToken);
-        return Ok(players.Select(PlayerResponse.From));
+            return Ok(response);
+        }
+
+        [HttpGet("{playerId:int}")]
+        public async Task<IActionResult> GetPlayerById(int playerId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetPlayerByIdQuery(playerId), cancellationToken);
+
+            if (result is null)
+                return NotFound();
+            var response = PlayerResponse.FromPlayer(result);
+
+            return Ok(response);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreatePlayerRequest req, CancellationToken cancellationToken)
+        {
+            int id;
+            try
+            {
+                id = await _mediator.Send(new CreatePlayerCommand(req.Name, req.Score), cancellationToken);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            var response = new PlayerResponse(id, req.Name, req.Score);
+
+            return CreatedAtAction(nameof(GetPlayerById), new { playerId = id }, response);
+        }
     }
 }
